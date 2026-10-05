@@ -1,15 +1,13 @@
-trigger: none
-
-pr:
-  branches:
-    include:
-      - main
-  # autoCancel defaults to true
-
-pool:
-  vmImage: ubuntu-latest
-
-stages:
+ pr:
+   branches:
+     include:
+       - main
+   # autoCancel defaults to true
+ 
+ pool:
+   vmImage: windows-latest
+ 
+ stages:
  - stage: validate_closure
    displayName: Validate closure
    condition: succeeded()
@@ -20,10 +18,10 @@ stages:
      timeoutInMinutes: 10
      cancelTimeoutInMinutes: 1
      steps:
-     - bash: |
-         echo "Starting long-running operation..."
-         sleep 300
-         echo "Long-running operation completed."
+     - powershell: |
+         Write-Host "Starting long-running operation..."
+         Start-Sleep -Seconds 300
+         Write-Host "Long-running operation completed."
        displayName: Long-running script
  
    - job: AlwaysRun
@@ -33,10 +31,10 @@ stages:
      timeoutInMinutes: 10
      cancelTimeoutInMinutes: 1
      steps:
-     - bash: |
-         echo "AlwaysRun started"
-         sleep 300
-         echo "AlwaysRun completed"
+     - powershell: |
+         Write-Host "AlwaysRun started"
+         Start-Sleep -Seconds 300
+         Write-Host "AlwaysRun completed"
        displayName: Slow always-run script
        condition: always()
  
@@ -51,10 +49,10 @@ stages:
      timeoutInMinutes: 10
      cancelTimeoutInMinutes: 1
      steps:
-     - bash: |
-         echo "Cleanup started"
-         echo "Job status: $(Agent.JobStatus)"
-         sleep 300
-         echo "Cleanup completed"
+     - powershell: |
+         Write-Host "Cleanup started"
+         Write-Host "Job status: $(Agent.JobStatus)"
+         Start-Sleep -Seconds 300
+         Write-Host "Cleanup completed"
        displayName: Slow cancellation cleanup
        condition: always()
