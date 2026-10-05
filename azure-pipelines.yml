@@ -24,35 +24,35 @@
          Write-Host "Long-running operation completed."
        displayName: Long-running script
  
-   - job: AlwaysRun
-     displayName: Always-run job
-     dependsOn: LongRunningJob
-     condition: always()
-     timeoutInMinutes: 10
-     cancelTimeoutInMinutes: 1
-     steps:
-     - powershell: |
-         Write-Host "AlwaysRun started"
-         Start-Sleep -Seconds 300
-         Write-Host "AlwaysRun completed"
-       displayName: Slow always-run script
-       condition: always()
+  #  - job: AlwaysRun
+  #    displayName: Always-run job
+  #    dependsOn: LongRunningJob
+  #    condition: always()
+  #    timeoutInMinutes: 10
+  #    cancelTimeoutInMinutes: 1
+  #    steps:
+  #    - powershell: |
+  #        Write-Host "AlwaysRun started"
+  #        Start-Sleep -Seconds 300
+  #        Write-Host "AlwaysRun completed"
+  #      displayName: Slow always-run script
+  #      condition: always()
  
- - stage: cancellation_cleanup
-   displayName: Run after cancellation
-   dependsOn: validate_closure
-   condition: always()
-   jobs:
-   - job: CancellationCleanup
-     displayName: Cancellation cleanup
-     condition: always()
-     timeoutInMinutes: 10
-     cancelTimeoutInMinutes: 1
-     steps:
-     - powershell: |
-         Write-Host "Cleanup started"
-         Write-Host "Job status: $(Agent.JobStatus)"
-         Start-Sleep -Seconds 300
-         Write-Host "Cleanup completed"
-       displayName: Slow cancellation cleanup
-       condition: always()
+#  - stage: cancellation_cleanup
+#    displayName: Run after cancellation
+#    dependsOn: validate_closure
+#    condition: always()
+#    jobs:
+#    - job: CancellationCleanup
+#      displayName: Cancellation cleanup
+#      condition: always()
+#      timeoutInMinutes: 10
+#      cancelTimeoutInMinutes: 1
+#      steps:
+#      - powershell: |
+#          Write-Host "Cleanup started"
+#          Write-Host "Job status: $(Agent.JobStatus)"
+#          Start-Sleep -Seconds 300
+#          Write-Host "Cleanup completed"
+#        displayName: Slow cancellation cleanup
+#        condition: always()
