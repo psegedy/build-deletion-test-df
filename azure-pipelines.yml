@@ -1,0 +1,60 @@
+trigger: none
+
+pr:
+  branches:
+    include:
+      - main
+  # autoCancel defaults to true
+
+pool:
+  vmImage: ubuntu-latest
+
+stages:
+ - stage: validate_closure
+   displayName: Validate closure
+   condition: succeeded()
+   jobs:
+   - job: LongRunningJob
+     displayName: Long-running job
+     condition: succeeded()
+     timeoutInMinutes: 10
+     cancelTimeoutInMinutes: 1
+     steps:
+     - bash: |
+         echo "Starting long-running operation..."
+         sleep 300
+         echo "Long-running operation completed."
+       displayName: Long-running script
+ 
+   - job: AlwaysRun
+     displayName: Always-run job
+     dependsOn: LongRunningJob
+     condition: always()
+     timeoutInMinutes: 10
+     cancelTimeoutInMinutes: 1
+     steps:
+     - bash: |
+         echo "AlwaysRun started"
+         sleep 300
+         echo "AlwaysRun completed"
+       displayName: Slow always-run script
+       condition: always()
+ 
+ - stage: cancellation_cleanup
+   displayName: Run after cancellation
+   dependsOn: validate_closure
+   condition: always()
+   jobs:
+   - job: CancellationCleanup
+     displayName: Cancellation cleanup
+     condition: always()
+     timeoutInMinutes: 10
+     cancelTimeoutInMinutes: 1
+     steps:
+     - bash: |
+         echo "Cleanup started"
+         echo "Job status: $(Agent.JobStatus)"
+         sleep 300
+         echo "Cleanup completed"
+       displayName: Slow cancellation cleanup
+       condition: always()
