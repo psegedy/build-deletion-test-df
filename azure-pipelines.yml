@@ -1,60 +1,79 @@
  trigger: none
-
+ 
  pr:
+   autoCancel: true
    branches:
      include:
-       - main
-   # autoCancel defaults to true
+     - main
  
- pool:
-   vmImage: windows-latest
+ jobs:
+ - job: ServerWait
+   displayName: Server-side deletion test
+   pool: server
+   timeoutInMinutes: 10
+   steps:
+   - task: Delay@1
+     displayName: Wait five minutes
+     inputs:
+       delayForMinutes: '5'
+
+#  trigger: none
+
+#  pr:
+#    branches:
+#      include:
+#        - main
+#    # autoCancel defaults to true
  
- stages:
- - stage: validate_closure
-   displayName: Validate closure
-   condition: succeeded()
-   jobs:
-   - job: LongRunningJob
-     displayName: Long-running job
-     condition: succeeded()
-     timeoutInMinutes: 10
-     cancelTimeoutInMinutes: 10
-     steps:
-     - powershell: |
-         Write-Host "Starting long-running operation..."
-         Start-Sleep -Seconds 300
-         Write-Host "Long-running operation completed."
-       displayName: Long-running script
+#  pool:
+#    vmImage: windows-latest
  
-   - job: AlwaysRun
-     displayName: Always-run job
-     dependsOn: LongRunningJob
-     condition: always()
-     timeoutInMinutes: 10
-     cancelTimeoutInMinutes: 1
-     steps:
-     - powershell: |
-         Write-Host "AlwaysRun started"
-         Start-Sleep -Seconds 300
-         Write-Host "AlwaysRun completed"
-       displayName: Slow always-run script
-       condition: always()
+#  stages:
+#  - stage: validate_closure
+#    displayName: Validate closure
+#    condition: succeeded()
+#    jobs:
+#    - job: LongRunningJob
+#      displayName: Long-running job
+#      condition: succeeded()
+#      timeoutInMinutes: 10
+#      cancelTimeoutInMinutes: 10
+#      steps:
+#      - powershell: |
+#          Write-Host "Starting long-running operation..."
+#          Start-Sleep -Seconds 300
+#          Write-Host "Long-running operation completed."
+#        displayName: Long-running script
  
- - stage: cancellation_cleanup
-   displayName: Run after cancellation
-   dependsOn: validate_closure
-   condition: always()
-   jobs:
-   - job: CancellationCleanup
-     displayName: Cancellation cleanup
-     condition: always()
-     timeoutInMinutes: 10
-     cancelTimeoutInMinutes: 1
-     steps:
-     - powershell: |
-         Write-Host "Cleanup started"
-         Write-Host "Job status: $(Agent.JobStatus)"
-         Start-Sleep -Seconds 300
-         Write-Host "Cleanup completed"
-       displayName: Slow cancellation cleanup
-       condition: always()
+#    - job: AlwaysRun
+#      displayName: Always-run job
+#      dependsOn: LongRunningJob
+#      condition: always()
+#      timeoutInMinutes: 10
+#      cancelTimeoutInMinutes: 1
+#      steps:
+#      - powershell: |
+#          Write-Host "AlwaysRun started"
+#          Start-Sleep -Seconds 300
+#          Write-Host "AlwaysRun completed"
+#        displayName: Slow always-run script
+#        condition: always()
+ 
+#  - stage: cancellation_cleanup
+#    displayName: Run after cancellation
+#    dependsOn: validate_closure
+#    condition: always()
+#    jobs:
+#    - job: CancellationCleanup
+#      displayName: Cancellation cleanup
+#      condition: always()
+#      timeoutInMinutes: 10
+#      cancelTimeoutInMinutes: 1
+#      steps:
+#      - powershell: |
+#          Write-Host "Cleanup started"
+#          Write-Host "Job status: $(Agent.JobStatus)"
+#          Start-Sleep -Seconds 300
+#          Write-Host "Cleanup completed"
+#        displayName: Slow cancellation cleanup
+#        condition: always()
