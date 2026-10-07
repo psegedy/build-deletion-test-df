@@ -1,49 +1,49 @@
- trigger: none
- 
- pr:
-   autoCancel: true
-   branches:
-     include:
-     - main
- 
- jobs:
- - job: ServerWait
-   displayName: Server-side deletion test
-   pool: server
-   timeoutInMinutes: 10
-   steps:
-   - task: Delay@1
-     displayName: Wait five minutes
-     inputs:
-       delayForMinutes: '5'
-
 #  trigger: none
-
+ 
 #  pr:
+#    autoCancel: true
 #    branches:
 #      include:
-#        - main
-#    # autoCancel defaults to true
+#      - main
  
-#  pool:
-#    vmImage: windows-latest
+#  jobs:
+#  - job: ServerWait
+#    displayName: Server-side deletion test
+#    pool: server
+#    timeoutInMinutes: 10
+#    steps:
+#    - task: Delay@1
+#      displayName: Wait five minutes
+#      inputs:
+#        delayForMinutes: '5'
+
+ trigger: none
+
+ pr:
+   branches:
+     include:
+       - main
+   # autoCancel defaults to true
  
-#  stages:
-#  - stage: validate_closure
-#    displayName: Validate closure
-#    condition: succeeded()
-#    jobs:
-#    - job: LongRunningJob
-#      displayName: Long-running job
-#      condition: succeeded()
-#      timeoutInMinutes: 10
-#      cancelTimeoutInMinutes: 10
-#      steps:
-#      - powershell: |
-#          Write-Host "Starting long-running operation..."
-#          Start-Sleep -Seconds 300
-#          Write-Host "Long-running operation completed."
-#        displayName: Long-running script
+ pool:
+   vmImage: windows-latest
+ 
+ stages:
+ - stage: validate_closure
+   displayName: Validate closure
+   condition: succeeded()
+   jobs:
+   - job: LongRunningJob
+     displayName: Long-running job
+     condition: succeeded()
+     timeoutInMinutes: 10
+     cancelTimeoutInMinutes: 10
+     steps:
+     - powershell: |
+         Write-Host "Starting long-running operation..."
+         Start-Sleep -Seconds 300
+         Write-Host "Long-running operation completed."
+       displayName: Long-running script
  
 #    - job: AlwaysRun
 #      displayName: Always-run job
