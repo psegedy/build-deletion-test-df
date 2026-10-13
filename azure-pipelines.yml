@@ -41,7 +41,7 @@
      steps:
      - powershell: |
          Write-Host "Starting long-running operation..."
-         Start-Sleep -Seconds 300
+         Start-Sleep -Seconds 600
          Write-Host "Long-running operation completed."
        displayName: Long-running script
  
