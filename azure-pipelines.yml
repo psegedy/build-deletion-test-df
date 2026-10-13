@@ -37,7 +37,7 @@
      displayName: Long-running job
      condition: succeeded()
      timeoutInMinutes: 10
-     cancelTimeoutInMinutes: 10
+     cancelTimeoutInMinutes: 3
      steps:
      - powershell: |
          Write-Host "Starting long-running operation..."
